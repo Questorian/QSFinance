@@ -1,0 +1,23 @@
+[% USE DBI('dbi:ADO:Provider=SQLNCLI;Server=nqsaaa01;Database=QBase;trusted_connection=yes', '', '')  -%]
+[% USE Number.Format %]
+
+	Questor Systems GmbH - Expense Reclaim form
+	===========================================
+
+Employee Name: Farley Balasruiya
+Employee No  : QS10001
+Date         :
+Deaprtment   : IT-DEPT
+
+     ID       Date     Category     CHF     Details
+
+[% FOREACH item = DBI.query('select 
+	expense_id,  CONVERT(nvarchar(30), value_date, 102) as value_date, category, amount, 
+	currency_code, amount_CHF, description
+from
+	dbo.expense_items
+order by
+	expense_id ')  -%]
+   #[% item.expense_id | format('%04d')%] [% item.value_date | format('%12s') %]  [% item.category | format('%7s') %] [% item.amount_CHF | format('%9.2f') %] - [% item.description %]  
+[% END - %]
+
